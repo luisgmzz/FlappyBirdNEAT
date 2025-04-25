@@ -2,7 +2,7 @@ import pygame
 import os
 
 def load_image(name: str):
-    return pygame.image.load(os.path.join("imgs", name))
+    return pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", name)))
 
 def rotate_image(img: pygame.Surface, rotation: int, x: int, y: int) :
     rotated_image = pygame.transform.rotate(img, rotation)
