@@ -79,3 +79,6 @@ class Bird:
     
     def get_x(self) -> int:
         return self.x
+    
+    def floor_hit(self) -> bool:
+        return self.x + self.img.get_height >= 730
