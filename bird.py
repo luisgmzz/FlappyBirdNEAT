@@ -76,3 +76,6 @@ class Bird:
 
     def get_mask(self):
         return pygame.mask.from_surface(self.img)
+    
+    def get_x(self) -> int:
+        return self.x
