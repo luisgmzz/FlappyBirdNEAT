@@ -45,5 +45,8 @@ class Pipe:
         t_point = bird_mask.overlap(top_mask, top_offset)
 
         return (t_point or b_point)
+    
+    def is_off_screen(self):
+        return self.x + self.PIPE_TOP.get_width() < 0
 
 
