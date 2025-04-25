@@ -49,7 +49,7 @@ class Bird:
                 self.tilt -= self.ROT_VEL
             
 
-    def draw(self, win):
+    def draw(self, win: pygame.Surface):
         self.img_count += 1
 
         # each 5 frames, change img
@@ -73,3 +73,6 @@ class Bird:
         rotated_image, rect = rotate_image(self.img, self.tilt, self.x, self.y)
 
         win.blit(rotated_image, rect.center)
+
+    def get_mask(self):
+        return pygame.mask.from_surface(self.img)
