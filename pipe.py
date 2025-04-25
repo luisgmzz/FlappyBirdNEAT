@@ -49,4 +49,11 @@ class Pipe:
     def is_off_screen(self) -> bool:
         return self.x + self.PIPE_TOP.get_width() < 0
 
-
+    # Checks if bird has passed this pipe for the first time 
+    # and updates its internal state accordingly
+    def has_passed(self, bird: Bird):
+        if not self.passed and self.x < bird.get_x():
+            self.passed = True
+            return True
+    
+        return False
