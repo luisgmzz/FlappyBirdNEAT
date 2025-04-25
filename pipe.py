@@ -46,7 +46,7 @@ class Pipe:
 
         return (t_point or b_point)
     
-    def is_off_screen(self):
+    def is_off_screen(self) -> bool:
         return self.x + self.PIPE_TOP.get_width() < 0
 
 
