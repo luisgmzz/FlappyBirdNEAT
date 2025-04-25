@@ -1,4 +1,5 @@
 from utils import load_image, rotate_image 
+from window import Window
 import pygame
 
 class Bird:
@@ -49,7 +50,7 @@ class Bird:
                 self.tilt -= self.ROT_VEL
             
 
-    def draw(self, win: pygame.Surface):
+    def draw(self, win: Window):
         self.img_count += 1
 
         # each 5 frames, change img

@@ -1,4 +1,5 @@
 from utils import load_image
+from window import Window
 from bird import Bird
 import pygame
 import random
@@ -28,7 +29,7 @@ class Pipe:
     def move(self):
         self.x -= self.VEL
 
-    def draw(self, win: pygame.Surface):
+    def draw(self, win: Window):
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 
