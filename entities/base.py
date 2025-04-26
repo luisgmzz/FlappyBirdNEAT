@@ -1,6 +1,5 @@
-from utils import load_image
-from window import Window
-import pygame
+from game.utils import load_image
+from game.view.window import Window
 
 class Base:
     IMG = load_image("base.png")

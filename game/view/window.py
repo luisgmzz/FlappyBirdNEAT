@@ -1,4 +1,4 @@
-from utils import load_image
+from game.utils import load_image
 import pygame
 pygame.font.init()
 

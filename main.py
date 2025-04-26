@@ -1,4 +1,4 @@
-import game
+import game.game as game
 
 def main():
     game_instance = game.Game()

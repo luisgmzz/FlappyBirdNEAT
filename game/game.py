@@ -1,7 +1,7 @@
-from bird import Bird
-from pipe import Pipe
-from base import Base
-from window import Window
+from entities.bird import Bird
+from entities.pipe import Pipe
+from entities.base import Base
+from view.window import Window
 import pygame
 
 class Game:

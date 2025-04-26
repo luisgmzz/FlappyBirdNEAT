@@ -1,6 +1,6 @@
-from utils import load_image
-from window import Window
-from bird import Bird
+from game.utils import load_image
+from game.view.window import Window
+from entities.bird import Bird
 import pygame
 import random
 

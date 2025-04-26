@@ -1,5 +1,5 @@
-from utils import load_image, rotate_image 
-from window import Window
+from game.utils import load_image, rotate_image 
+from view.window import Window
 import pygame
 
 class Bird:
