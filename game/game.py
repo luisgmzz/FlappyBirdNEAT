@@ -10,7 +10,7 @@ class Game:
     SPACE_BETWEEN_PIPES = 650
     FPS = 30
 
-    def __init__(self):
+    def __init__(self, net=None):
         self.bird = Bird(230, 350)
         self.base = Base(730)
         self.pipes = [Pipe(self.SPACE_BETWEEN_PIPES)]
@@ -19,6 +19,11 @@ class Game:
         self.score = 0
         self.clock = pygame.time.Clock()
 
+        if net:
+            self.ai_playing = True
+            self.net = net
+        else:
+            self.ai_playing = False
         self.keepRunning = True
 
     def frame(self):
@@ -31,11 +36,21 @@ class Game:
                 print("Cerrado")
                 self.keepRunning = False
 
-            if event.type == pygame.KEYDOWN:
+            if not self.ai_playing and event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.bird.jump()
 
         self.bird.move()
+        if self.ai_playing:
+            pipe_ind = 0
+            if len(self.pipes) > 1 and self.bird.x > self.pipes[0].x + self.pipes[0].PIPE_TOP.get_width():
+                pipe_ind = 1
+
+            output = self.net.activate(
+                (self.bird.get_y(), abs(self.bird.get_y() - self.pipes[pipe_ind].height), abs(self.bird.get_y() - self.pipes[pipe_ind].bottom)))
+            if output[0] > .5:
+                self.bird.jump()
+
         self.base.move()
 
         rem = []

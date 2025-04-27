@@ -1,9 +1,12 @@
 import os
 import sys
+import pickle
 
 from game.game import Game
 from game.neatGame import run_neat
 import neat
+from game.neuronalNetworkBuilder import NeuronalNetworkBuilder
+
 
 def run(config_file):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
@@ -21,20 +24,33 @@ def run(config_file):
 
     # Run for up to 50 generations.
     winner = p.run(run_neat, 50)
-
     # show final stats
     print("\nBest genome:\n{!s}".format(winner))
+
+    with open("neat/best_genome.pkl", "wb") as f:
+        pickle.dump(winner, f)
 
 def neat_runner():
     # Determine path to configuration file. This path manipulation is
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, "neat_config.txt")
+    config_path = os.path.join(local_dir, "neat/neat_config.txt")
     run(config_path)
 
 def game_runner():
     game_instance = Game()
+    game_instance.run()
+    quit()
+
+def ai_runner():
+    local_dir = os.path.dirname(__file__)
+    config_path = os.path.join(local_dir, "neat/neat_config.txt")
+    genome_path = os.path.join(local_dir, "neat/best_genome.pkl")
+
+    nnb = NeuronalNetworkBuilder(config_path, genome_path)
+
+    game_instance = Game(nnb.get_nn())
     game_instance.run()
     quit()
 
@@ -48,6 +64,8 @@ def main():
         game_runner()
     elif option == 2:
         neat_runner()
+    elif option == 3:
+        ai_runner()
     else:
         print("El argumento debe ser 1 (para jugar) o 2 (para correr NEAT)")
 
