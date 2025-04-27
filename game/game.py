@@ -19,15 +19,17 @@ class Game:
         self.score = 0
         self.clock = pygame.time.Clock()
 
+        self.keepRunning = True
+
     def frame(self):
         add_pipe = False
-        run = True
 
         self.clock.tick(self.FPS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                print("Cerrado")
+                self.keepRunning = False
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -48,7 +50,8 @@ class Game:
 
 
             if pipe.collide(self.bird):
-                run = False
+                print("Chocado")
+                self.keepRunning = False
 
         if add_pipe:
             self.score += 1
@@ -59,17 +62,15 @@ class Game:
 
         if self.bird.floor_hit() or self.bird.touched_sky():
             print("perdiste")
-            run = False
+            self.keepRunning = False
 
 
-        self.window.draw_window() 
-
-        return run
+        self.window.draw_window()
 
 
     def run(self):
-        while self.frame():
-            pass
+        while self.keepRunning:
+            self.frame()
 
 
     def draw_bird(self):

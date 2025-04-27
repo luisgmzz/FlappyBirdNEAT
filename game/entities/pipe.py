@@ -33,17 +33,36 @@ class Pipe:
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 
+        # --- DEBUG: Dibuja rectángulos de las máscaras ---
+        # Crear las máscaras
+
+        # top_mask = pygame.mask.from_surface(self.PIPE_TOP)
+        # bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
+
+        # Conseguir los bounding rects
+        # top_rect = top_mask.get_rect()
+        # top_rect.x = self.x
+        # top_rect.y = self.top
+
+        # bottom_rect = bottom_mask.get_rect()
+        # bottom_rect.x = self.x
+        # bottom_rect.y = self.bottom
+
+        # Dibujar los rectángulos
+        # pygame.draw.rect(win.win, (0, 255, 0), top_rect, 2)  # Verde para el tubo de arriba
+        # pygame.draw.rect(win.win, (0, 0, 255), bottom_rect, 2)  # Azul para el tubo de abajo
+
     def collide(self, bird: Bird):
         bird_mask = bird.get_mask()
 
         top_mask = pygame.mask.from_surface(self.PIPE_TOP)
         bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
 
-        top_offset = (self.x - bird.x, self.top - round(bird.y))
-        bottom_offset = (self.x - bird.x, self.bottom - round(bird.y))
+        top_offset = (round(self.x - bird.get_x()), round(self.top - bird.get_y()))
+        bottom_offset = (round(self.x - bird.get_x()), round(self.bottom - bird.get_y()))
 
-        b_point = bird_mask.overlap(bottom_mask, bottom_offset)
         t_point = bird_mask.overlap(top_mask, top_offset)
+        b_point = bird_mask.overlap(bottom_mask, bottom_offset)
 
         return t_point or b_point
     

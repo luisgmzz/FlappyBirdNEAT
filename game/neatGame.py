@@ -10,7 +10,7 @@ from game.view.neatWindow import NeatWindow
 pygame.font.init()
 
 class NeatGame:
-    FPS = 30
+    FPS = 120
 
     def __init__(self, genomes, config, gen):
         self.genomes = genomes
@@ -104,7 +104,8 @@ class NeatGame:
         self.window.draw_window()
 
     def run_generation(self):
-        while len(self.birds) > 0:
+        self.score = 0
+        while len(self.birds) > 0 and self.score < 50:
             self.run_frame()
 
 
