@@ -1,11 +1,9 @@
 import os
 
-from game.neatGame import NeatGame
+from game.neatGame import run_neat
 import neat
 
 def run(config_file):
-    game = NeatGame()
-
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_file)
@@ -20,7 +18,7 @@ def run(config_file):
     #p.add_reporter(neat.Checkpointer(5))
 
     # Run for up to 50 generations.
-    winner = p.run(game.run_neat, 50)
+    winner = p.run(run_neat, 50)
 
     # show final stats
     print("\nBest genome:\n{!s}".format(winner))

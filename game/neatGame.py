@@ -5,120 +5,113 @@ from game.entities.base import Base
 from game.entities.bird import Bird
 from game.entities.pipe import Pipe
 from game.game import Game
-from game.view.window import Window
+from game.view.neatWindow import NeatWindow
 
 pygame.font.init()
 
 class NeatGame:
-    GEN = 0
-    def draw_window(self, win: pygame.Surface, birds: list[Bird], pipes: list[Pipe], base: Base, score: int, gen: int):
-        score_text = Window.STAT_FONT.render("Score: " + str(score), 1, Window.COLOR_WHITE)
-        gen_text = Window.STAT_FONT.render("Gen: " + str(gen), 1, Window.COLOR_WHITE)
+    FPS = 30
 
-        if gen == 0:
-            gen = 1
+    def __init__(self, genomes, config, gen):
+        self.genomes = genomes
+        self.config = config
 
-        win.blit(Window.BG_IMG, (0, 0))
+        self.score = 0
+        self.gen = gen
+        self.birds: list[Bird] = []
+        self.nets = []
+        self.ge = []
 
+        self.pipes: list[Pipe] = [Pipe(Game.SPACE_BETWEEN_PIPES)]
+        self.base = Base(730)
+        self.clock = pygame.time.Clock()
 
-        for pipe in pipes:
-            pipe.draw(win)
+        self.window = NeatWindow(self)
 
-        base.draw(win)
+        for _, g in self.genomes:
+            net = neat.nn.FeedForwardNetwork.create(g, self.config)
+            self.nets.append(net)
+            self.birds.append(Bird(230, 350))
 
-        for bird in birds:
-            bird.draw(win)
-
-
-        win.blit(score_text, (Window.WIDTH-10-score_text.get_width(), 10))
-        win.blit(gen_text, (10, 10))
-        pygame.display.update()
-
-    def run_neat(self, genomes, config):
-        self.GEN += 1
-        nets = []
-        ge = []
-        birds: list[Bird] = []
-
-        for _, g in genomes:
-            net = neat.nn.FeedForwardNetwork.create(g, config)
-            nets.append(net)
-            birds.append(Bird(230, 350))
             g.fitness = 0
-            ge.append(g)
 
-        base = Base(730)
-        pipes = [Pipe(Game.SPACE_BETWEEN_PIPES)]
+            self.ge.append(g)
 
-        win = pygame.display.set_mode((Window.WIDTH, Window.HEIGHT))
-        clock = pygame.time.Clock()
+    def run_frame(self):
+        add_pipe = False
 
-        score = 0
+        self.clock.tick(self.FPS)
 
-        run = True
-        while run:
-            add_pipe = False
-            run = True
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
 
-            clock.tick(Game.FPS)
+        pipe_ind = 0
+        if len(self.birds) > 0:
+            if len(self.pipes) > 1 and self.birds[0].x > self.pipes[0].x + self.pipes[0].PIPE_TOP.get_width():
+                pipe_ind = 1
+        else:
+            return
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                    pygame.quit()
-                    quit()
+        for bird in self.birds:
+            i = self.birds.index(bird)
+            bird.move()
+            self.ge[i].fitness += .1
 
-            pipe_ind = 0
-            if len(birds) > 0:
-                if len(pipes) > 1 and birds[0].x > pipes[0].x + pipes[0].PIPE_TOP.get_width():
-                    pipe_ind = 1
-            else:
-                break
+            output = self.nets[i].activate(
+                (bird.y, abs(bird.y - self.pipes[pipe_ind].height), abs(bird.y - self.pipes[pipe_ind].bottom)))
+            if output[0] > .5:
+                bird.jump()
 
-            for bird in birds:
-                i = birds.index(bird)
-                bird.move()
-                ge[i].fitness += .1
+        self.base.move()
 
-                output = nets[i].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))
-                if output[0] > .5:
-                    bird.jump()
+        rem = []
+        for pipe in self.pipes:
+            pipe.move()
 
-            base.move()
+            if pipe.is_off_screen():
+                rem.append(pipe)
 
-            rem = []
-            for pipe in pipes:
-                pipe.move()
+            for bird in self.birds:
+                if pipe.collide(bird):
+                    i = self.birds.index(bird)
+                    self.ge[i].fitness -= 1  # Penalize if the bird collides
+                    self.birds.pop(i)
+                    self.nets.pop(i)
+                    self.ge.pop(i)
 
-                if pipe.is_off_screen():
-                    rem.append(pipe)
+                if pipe.has_passed(bird):
+                    add_pipe = True
 
-                for bird in birds:
-                    if pipe.collide(bird):
-                        i = birds.index(bird)
-                        ge[i].fitness -= 1 # Penalize if the bird collides
-                        birds.pop(i)
-                        nets.pop(i)
-                        ge.pop(i)
+        if add_pipe:
+            self.score += 1
+            for g in self.ge:
+                g.fitness += 5
 
-                    if pipe.has_passed(bird):
-                        add_pipe = True
+            self.pipes.append(Pipe(Game.SPACE_BETWEEN_PIPES))
 
-            if add_pipe:
-                score += 1
-                for g in ge:
-                    g.fitness += 5
+        for r in rem:
+            self.pipes.remove(r)
 
-                pipes.append(Pipe(Game.SPACE_BETWEEN_PIPES))
+        for bird in self.birds:
+            if bird.floor_hit() or bird.touched_sky():
+                i = self.birds.index(bird)
+                self.birds.pop(i)
+                self.nets.pop(i)
+                self.ge.pop(i)
 
-            for r in rem:
-                pipes.remove(r)
+        self.window.draw_window()
 
-            for bird in birds:
-                if bird.floor_hit() or bird.touched_sky():
-                    i = birds.index(bird)
-                    birds.pop(i)
-                    nets.pop(i)
-                    ge.pop(i)
+    def run_generation(self):
+        while len(self.birds) > 0:
+            self.run_frame()
 
-            self.draw_window(win, birds, pipes, base, score, self.GEN)
+
+GEN = 1
+
+def run_neat(genomes, config):
+    global GEN
+    game = NeatGame(genomes, config, GEN)
+    game.run_generation()
+    GEN += 1
