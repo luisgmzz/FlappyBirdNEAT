@@ -43,11 +43,11 @@ class Game:
         self.bird.move()
         if self.ai_playing:
             pipe_ind = 0
-            if len(self.pipes) > 1 and self.bird.x > self.pipes[0].x + self.pipes[0].PIPE_TOP.get_width():
+            if len(self.pipes) > 1 and self.bird.get_x() > self.pipes[0].get_x() + self.pipes[0].get_top_pipe().get_width():
                 pipe_ind = 1
 
             output = self.net.activate(
-                (self.bird.get_y(), abs(self.bird.get_y() - self.pipes[pipe_ind].height), abs(self.bird.get_y() - self.pipes[pipe_ind].bottom)))
+                (self.bird.get_y(), abs(self.bird.get_y() - self.pipes[pipe_ind].get_height()), abs(self.bird.get_y() - self.pipes[pipe_ind].get_bottom())))
             if output[0] > .5:
                 self.bird.jump()
 

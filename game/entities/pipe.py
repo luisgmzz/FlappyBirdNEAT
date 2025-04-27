@@ -77,3 +77,15 @@ class Pipe:
             return True
     
         return False
+
+    def get_height(self):
+        return self.height
+
+    def get_bottom(self):
+        return self.bottom
+
+    def get_x(self):
+        return self.x
+
+    def get_top_pipe(self):
+        return self.PIPE_TOP

@@ -49,7 +49,7 @@ class NeatGame:
 
         pipe_ind = 0
         if len(self.birds) > 0:
-            if len(self.pipes) > 1 and self.birds[0].x > self.pipes[0].x + self.pipes[0].PIPE_TOP.get_width():
+            if len(self.pipes) > 1 and self.birds[0].get_x() > self.pipes[0].get_x() + self.pipes[0].get_top_pipe().get_width():
                 pipe_ind = 1
         else:
             return
@@ -60,7 +60,7 @@ class NeatGame:
             self.ge[i].fitness += .1
 
             output = self.nets[i].activate(
-                (bird.y, abs(bird.y - self.pipes[pipe_ind].height), abs(bird.y - self.pipes[pipe_ind].bottom)))
+                (bird.get_y(), abs(bird.get_y() - self.pipes[pipe_ind].get_height()), abs(bird.get_y() - self.pipes[pipe_ind].get_bottom())))
             if output[0] > .5:
                 bird.jump()
 
