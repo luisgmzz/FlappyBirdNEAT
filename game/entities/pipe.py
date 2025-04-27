@@ -29,7 +29,7 @@ class Pipe:
     def move(self):
         self.x -= self.VEL
 
-    def draw(self, win: Window):
+    def draw(self, win: Window or pygame.Surface):
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 

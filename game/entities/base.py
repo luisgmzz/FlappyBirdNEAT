@@ -1,3 +1,5 @@
+import pygame
+
 from game.utils import load_image
 from game.view.window import Window
 
@@ -21,7 +23,7 @@ class Base:
         if self.x2 + self.WIDTH < 0:
             self.x2 = self.x1 + self.WIDTH
 
-    def draw(self, win: Window):
+    def draw(self, win: Window or pygame.Surface):
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
 

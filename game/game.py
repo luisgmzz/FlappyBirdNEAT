@@ -51,7 +51,6 @@ class Game:
         if add_pipe:
             self.score += 1
             self.pipes.append(Pipe(self.SPACE_BETWEEN_PIPES))
-            add_pipe = False
 
         for r in rem:
             self.pipes.remove(r)
