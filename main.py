@@ -1,5 +1,7 @@
 import os
+import sys
 
+from game.game import Game
 from game.neatGame import run_neat
 import neat
 
@@ -23,10 +25,31 @@ def run(config_file):
     # show final stats
     print("\nBest genome:\n{!s}".format(winner))
 
-if __name__ == "__main__":
+def neat():
     # Determine path to configuration file. This path manipulation is
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "neat_config.txt")
     run(config_path)
+
+def game():
+    game_instance = Game()
+    game_instance.run()
+    quit()
+
+def main():
+    if len(sys.argv) < 2:
+        print("Introduce un argumento")
+        return
+    option = int(sys.argv[1])
+
+    if option == 1:
+        game()
+    elif option == 2:
+        neat()
+
+    print("El argumento debe ser 1 (para jugar) o 2 (para correr NEAT)")
+
+if __name__ == "__main__":
+    main()

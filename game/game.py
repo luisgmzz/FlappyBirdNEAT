@@ -1,3 +1,5 @@
+import time
+
 from game.entities.bird import Bird
 from game.entities.pipe import Pipe
 from game.entities.base import Base
@@ -46,7 +48,7 @@ class Game:
 
 
             if pipe.collide(self.bird):
-                pass
+                run = False
 
         if add_pipe:
             self.score += 1
@@ -55,8 +57,9 @@ class Game:
         for r in rem:
             self.pipes.remove(r)
 
-        if self.bird.floor_hit():
-            pass
+        if self.bird.floor_hit() or self.bird.touched_sky():
+            print("perdiste")
+            run = False
 
 
         self.window.draw_window() 

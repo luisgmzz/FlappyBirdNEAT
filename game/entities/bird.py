@@ -50,7 +50,7 @@ class Bird:
                 self.tilt -= self.ROT_VEL
             
 
-    def draw(self, win: Window or pygame.Surface):
+    def draw(self, win: Window):
         self.img_count += 1
 
         # each 5 frames, change img

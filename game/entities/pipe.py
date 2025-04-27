@@ -29,7 +29,7 @@ class Pipe:
     def move(self):
         self.x -= self.VEL
 
-    def draw(self, win: Window or pygame.Surface):
+    def draw(self, win: Window):
         win.blit(self.PIPE_TOP, (self.x, self.top))
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 
@@ -45,7 +45,7 @@ class Pipe:
         b_point = bird_mask.overlap(bottom_mask, bottom_offset)
         t_point = bird_mask.overlap(top_mask, top_offset)
 
-        return (t_point or b_point)
+        return t_point or b_point
     
     def is_off_screen(self) -> bool:
         return self.x + self.PIPE_TOP.get_width() < 0

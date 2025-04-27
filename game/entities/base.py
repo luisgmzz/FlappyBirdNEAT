@@ -23,7 +23,7 @@ class Base:
         if self.x2 + self.WIDTH < 0:
             self.x2 = self.x1 + self.WIDTH
 
-    def draw(self, win: Window or pygame.Surface):
+    def draw(self, win: Window):
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
 
