@@ -82,4 +82,7 @@ class Bird:
         return self.x
     
     def floor_hit(self) -> bool:
-        return self.x + self.img.get_height() >= 730
+        return self.y + self.img.get_height() >= 730
+
+    def touched_sky(self) -> bool:
+        return self.y < 0
