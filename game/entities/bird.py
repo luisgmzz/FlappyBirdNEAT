@@ -73,13 +73,27 @@ class Bird:
 
         rotated_image, rect = rotate_image(self.img, self.tilt, self.x, self.y)
 
-        win.blit(rotated_image, rect.center)
+        win.blit(rotated_image, rect.topleft)
+
+        # --- DEBUG: dibujar la máscara ---
+        # mask = pygame.mask.from_surface(rotated_image)
+        # mask_outline = mask.outline()
+
+        # if mask_outline:
+        #   pygame.draw.lines(win.win , (255, 0, 0), True,
+        #                      [(point[0] + rect.left, point[1] + rect.top) for point in mask_outline], 2)
 
     def get_mask(self):
         return pygame.mask.from_surface(self.img)
     
     def get_x(self) -> int:
         return self.x
-    
+
+    def get_y(self) -> int:
+        return self.y
+
     def floor_hit(self) -> bool:
-        return self.x + self.img.get_height() >= 730
+        return self.y + self.img.get_height() >= 730
+
+    def touched_sky(self) -> bool:
+        return self.y < 0

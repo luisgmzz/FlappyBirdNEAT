@@ -1,3 +1,5 @@
+import pygame
+
 from game.utils import load_image
 from game.view.window import Window
 

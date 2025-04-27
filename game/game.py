@@ -1,3 +1,5 @@
+import time
+
 from game.entities.bird import Bird
 from game.entities.pipe import Pipe
 from game.entities.base import Base
@@ -17,15 +19,17 @@ class Game:
         self.score = 0
         self.clock = pygame.time.Clock()
 
+        self.keepRunning = True
+
     def frame(self):
         add_pipe = False
-        run = True
 
         self.clock.tick(self.FPS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                print("Cerrado")
+                self.keepRunning = False
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -46,28 +50,27 @@ class Game:
 
 
             if pipe.collide(self.bird):
-                pass
+                print("Chocado")
+                self.keepRunning = False
 
         if add_pipe:
             self.score += 1
             self.pipes.append(Pipe(self.SPACE_BETWEEN_PIPES))
-            add_pipe = False
 
         for r in rem:
             self.pipes.remove(r)
 
-        if self.bird.floor_hit():
-            pass
+        if self.bird.floor_hit() or self.bird.touched_sky():
+            print("perdiste")
+            self.keepRunning = False
 
 
-        self.window.draw_window() 
-
-        return run
+        self.window.draw_window()
 
 
     def run(self):
-        while self.frame():
-            pass
+        while self.keepRunning:
+            self.frame()
 
 
     def draw_bird(self):
