@@ -27,7 +27,7 @@ def run(config_file):
     # show final stats
     print("\nBest genome:\n{!s}".format(winner))
 
-    with open("neat/best_genome.pkl", "wb") as f:
+    with open("neat/best_genome.pickle", "wb") as f:
         pickle.dump(winner, f)
 
 def neat_runner():
