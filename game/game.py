@@ -1,5 +1,3 @@
-import time
-
 from game.entities.bird import Bird
 from game.entities.pipe import Pipe
 from game.entities.base import Base
