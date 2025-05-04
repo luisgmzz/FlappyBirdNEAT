@@ -105,7 +105,7 @@ class NeatGame:
 
     def run_generation(self):
         self.score = 0
-        while len(self.birds) > 0 and self.score < 50:
+        while len(self.birds) > 0 and self.score < 30:
             self.run_frame()
 
 
